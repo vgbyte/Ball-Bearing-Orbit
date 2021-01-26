@@ -119,40 +119,40 @@ for i=1:maxItr
     
     
     kix1_1 = ts*fun_distance(u_i(i));
-    kix2_1 = ts*fun_race_x(Mi,F_inner(1),Fo,Wi,t(i));
+    kix2_1 = ts*fun_race_x(Mi,c_s,K_s,F_inner(1),Fo,Wi,u_i(i),x_i(i),t(i));
     kix1_2 = ts*fun_distance(u_i(i)+0.5*kix2_1);
-    kix2_2 = ts*fun_race_x(Mi,F_inner(1),Fo,Wi,t(i)+ts/2);
+    kix2_2 = ts*fun_race_x(Mi,c_s,K_s,F_inner(1),Fo,Wi,u_i(i)+0.5*kix2_1,x_i(i)+0.5*kix1_1,t(i)+ts/2);
     kix1_3 = ts*fun_distance(u_i(i)+0.5*kix2_2);
-    kix2_3 = ts*fun_race_x(Mi,F_inner(1),Fo,Wi,t(i)+ts/2);
+    kix2_3 = ts*fun_race_x(Mi,c_s,K_s,F_inner(1),Fo,Wi,u_i(i)+0.5*kix2_2,x_i(i)+0.5*kix1_2,t(i)+ts/2);
     kix1_4 = ts*fun_distance(u_i(i)+kix2_3);
-    kix2_4 = ts*fun_race_x(Mi,F_inner(1),Fo,Wi,t(i)+ts);
+    kix2_4 = ts*fun_race_x(Mi,c_s,K_s,F_inner(1),Fo,Wi,u_i(i)+kix2_3,x_i(i)+kix1_3,t(i)+ts);
     
-    kiy1_1 = ts*fun_distance(u_i(i));
-    kiy2_1 = ts*fun_race_y(Mi,F_inner(2),Fo,Wi,t(i));
-    kiy1_2 = ts*fun_distance(u_i(i)+0.5*kiy2_1);
-    kiy2_2 = ts*fun_race_y(Mi,F_inner(2),Fo,Wi,t(i)+ts/2);
-    kiy1_3 = ts*fun_distance(u_i(i)+0.5*kiy2_2);
-    kiy2_3 = ts*fun_race_y(Mi,F_inner(2),Fo,Wi,t(i)+ts/2);
-    kiy1_4 = ts*fun_distance(u_i(i)+kiy2_3);
-    kiy2_4 = ts*fun_race_y(Mi,F_inner(2),Fo,Wi,t(i)+ts);
+    kiy1_1 = ts*fun_distance(v_i(i));
+    kiy2_1 = ts*fun_race_y(Mi,c_s,K_s,F_inner(2),Fo,Wi,v_i(i),y_i(i),t(i));
+    kiy1_2 = ts*fun_distance(v_i(i)+0.5*kiy2_1);
+    kiy2_2 = ts*fun_race_y(Mi,c_s,K_s,F_inner(2),Fo,Wi,v_i(i)+0.5*kiy2_1,y_i(i)+0.5*kiy1_1,t(i)+ts/2);
+    kiy1_3 = ts*fun_distance(v_i(i)+0.5*kiy2_2);
+    kiy2_3 = ts*fun_race_y(Mi,c_s,K_s,F_inner(2),Fo,Wi,v_i(i)+0.5*kiy2_2,y_i(i)+0.5*kiy1_2,t(i)+ts/2);
+    kiy1_4 = ts*fun_distance(v_i(i)+kiy2_3);
+    kiy2_4 = ts*fun_race_y(Mi,c_s,K_s,F_inner(2),Fo,Wi,v_i(i)+kiy2_3,y_i(i)+kiy1_3,t(i)+ts);
     
     kox1_1 = ts*fun_distance(u_o(i));
-    kox2_1 = ts*fun_race_x(Mi,F_outer(1),0,0,0);
+    kox2_1 = ts*fun_race_outer(Mo,F_outer(1));
     kox1_2 = ts*fun_distance(u_o(i)+0.5*kox2_1);
-    kox2_2 = ts*fun_race_x(Mi,F_outer(1),0,0,0);
+    kox2_2 = ts*fun_race_outer(Mo,F_outer(1));
     kox1_3 = ts*fun_distance(u_o(i)+0.5*kox2_2);
-    kox2_3 = ts*fun_race_x(Mi,F_outer(1),0,0,0);
+    kox2_3 = ts*fun_race_outer(Mo,F_outer(1));
     kox1_4 = ts*fun_distance(u_o(i)+kox2_3);
-    kox2_4 = ts*fun_race_x(Mi,F_outer(1),0,0,0);
+    kox2_4 = ts*fun_race_outer(Mo,F_outer(1));
     
-    koy1_1 = ts*fun_distance(u_o(i));
-    koy2_1 = ts*fun_race_x(Mi,F_outer(2),0,0,0);
-    koy1_2 = ts*fun_distance(u_o(i)+0.5*koy2_1);
-    koy2_2 = ts*fun_race_x(Mi,F_outer(2),0,0,0);
-    koy1_3 = ts*fun_distance(u_o(i)+0.5*koy2_2);
-    koy2_3 = ts*fun_race_x(Mi,F_outer(2),0,0,0);
-    koy1_4 = ts*fun_distance(u_o(i)+0.5*koy2_3);
-    koy2_4 = ts*fun_race_x(Mi,F_outer(2),0,0,0);
+    koy1_1 = ts*fun_distance(v_o(i));
+    koy2_1 = ts*fun_race_outer(Mo,F_outer(2));
+    koy1_2 = ts*fun_distance(v_o(i)+0.5*koy2_1);
+    koy2_2 = ts*fun_race_outer(Mo,F_outer(2));
+    koy1_3 = ts*fun_distance(v_o(i)+0.5*koy2_2);
+    koy2_3 = ts*fun_race_outer(Mo,F_outer(2));
+    koy1_4 = ts*fun_distance(v_o(i)+koy2_3);
+    koy2_4 = ts*fun_race_outer(Mo,F_outer(2));
     
     
     % Updating position and velocity vector of inner race center
@@ -182,12 +182,16 @@ function a = fun_ball(Mb,W,F_ball_total,r)
     a=F_ball_total/Mb+r*W^2;
 end
 
-function a = fun_race_x(M,F_total,Fo,Wi,t)
-    a=(F_total+Fo*cos(Wi*t))/M;
+function a= fun_race_outer(M,F)
+    a=F/M;
 end
 
-function a = fun_race_y(M,F_total,Fo,Wi,t)
-    a=(F_total+Fo*sin(Wi*t))/M;
+function a = fun_race_x(M,c,k,F_total,Fo,Wi,u,x,t)
+    a=(F_total+Fo*cos(Wi*t)-c*u-k*x)/M;
+end
+
+function a = fun_race_y(M,c,k,F_total,Fo,Wi,v,y,t)
+    a=(F_total+Fo*sin(Wi*t)-c*v-k*y)/M;
 end
 
 function a = projection_A_on_B(A,B)
