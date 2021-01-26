@@ -16,9 +16,9 @@ clear all;
     Kpb = 2.8397e+05;     % Hertzian Constant Coefficient in N/m^(3/2)
     K_s = 3.7e7;          % Linear stiffness between shaft and bearing in N/m
     
-    ts  = 0.0001;         % Time step in sec
-    TT  = 0.02;           % Total time in sec
-    Fo  = 0;              % Harmonic force magnitude in N
+    ts  = 1e-6;           % Time step in sec
+    TT  = 3;              % Total time in sec
+    Fo  = 10;             % Harmonic force magnitude in N
     t(1)= 0;
     
 % Initial position vector of ball and races center
@@ -169,10 +169,15 @@ for i=1:maxItr
     
     t(i+1)=t(i)+ts;
 end
-  
+figure(1)
 plot(x_o,y_o)
-title('Orbit of outer race')
-axis equal
+title('Orbit of center of outer race')
+grid on
+
+figure(2)
+plot(X,Y)
+title('Path of center of Ball')
+grid on
 
 function a = fun_distance(v)
     a = v;
