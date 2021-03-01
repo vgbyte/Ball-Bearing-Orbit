@@ -2,53 +2,69 @@ clear all;
 
 % INPUT DATA ( All the dimensions are in SI unit )
 
-    Wi  = 5; Wo = 0;      % Inner and Outer race angular velocity in rad/sec, Wi=5rad/sec
+    Wi  = 180; Wo = 0;      % Inner and Outer race angular velocity in rad/sec, Wi=5rad/sec
     W   = Wi/2;           % Angular velocity of ball cenetr rotating about bearing axis 
-    Rb  = 3.967e-3;       % Ball Radius in m
+    Rb  = 3.98e-3;       % Ball Radius in m
     Ri  = 13.281e-3;      % Inner race radius in m
-    Ro  = 21.226e-3;      % Outer race radius in m
+    Ro  = 21.24e-3;      % Outer race radius in m
     N   = 8;              % Number of balls
     Mb  = 0.002;          % Single Ball Mass
     Mi  = 0.045;          % Inner race mass
-    Mo  = 0.5;            % Outer race mass
+    Mo  = 0.05;           % Outer race mass
     c_s = 740;            % Damping coefficient in N-s/m
     c_b = 800;            % Damping coefficient in N-s/m
     Kpb = 2.8397e+05;     % Hertzian Constant Coefficient in N/m^(3/2)
     K_s = 3.7e7;          % Linear stiffness between shaft and bearing in N/m
     
     ts  = 1e-6;           % Time step in sec
-    TT  = 3;              % Total time in sec
+    TT  = 1;              % Total time in sec
     Fo  = 10;             % Harmonic force magnitude in N
-    t(1)= 0;
     
-% Initial position vector of ball and races center
-    x_i(1)=0; y_i(1)=0;   % Position vector of inner race center
-    u_i(1)=0; v_i(1)=0;   % Initial velocity of inner race
-    x_o(1)=0; y_o(1)=0;   % Position vector of outer race center
-    u_o(1)=0; v_o(1)=0;   % Initial velocity of outer race
+    maxItr=TT/ts;         % Total iteration 
+    
+    x_b=zeros(N,maxItr+1);
+    y_b=zeros(N,maxItr+1);
+    dr_b=zeros(N,maxItr+1);
+    x_i=zeros(1,maxItr+1);
+    x_o=zeros(1,maxItr+1);
+    y_i=zeros(1,maxItr+1);
+    y_o=zeros(1,maxItr+1);
+    u_i=zeros(1,maxItr+1);
+    u_o=zeros(1,maxItr+1);
+    v_i=zeros(1,maxItr+1);
+    v_o=zeros(1,maxItr+1);
+    t  =zeros(1,maxItr+1);
+    
+    X=zeros(1,maxItr);
+    Y=zeros(1,maxItr);
+    
+    
+% Initial position & velocity vector of ball and races center
+    x_i(1)=0; y_i(1)=0;
+    u_i(1)=0; v_i(1)=0;
+    x_o(1)=0; y_o(1)=0;
+    u_o(1)=0; v_o(1)=0;
     for n=1:N
         % Position vector of ball center
-        x_b(n,1)=(Ri+Rb)*cos((2*pi/N)*(n-1));
-        y_b(n,1)=(Ri+Rb)*sin((2*pi/N)*(n-1));
-        dr_b(n,1)=0;      % Only radial velocity is defined
+        x_b(n,1) = (Ri+Rb)*cos((2*pi/N)*(n-1));
+        y_b(n,1) = (Ri+Rb)*sin((2*pi/N)*(n-1));
+        dr_b(n,1)= 0;      % Only radial velocity is defined
     end
     
-maxItr=TT/ts;
 
 for i=1:maxItr
     F_inner=[0,0];
     F_outer=[0,0];
     for n=1:N
-        F_damping_ball_inner=0;F_spring_ball_inner=0;
-        F_damping_ball_outer=0;F_spring_ball_outer=0;
-        F_spring_ball_mag=0;F_damping_ball_mag=0;
+        F_damping_ball_inner = 0; F_spring_ball_inner = 0;
+        F_damping_ball_outer = 0; F_spring_ball_outer = 0;
+        F_spring_ball_mag    = 0; F_damping_ball_mag  = 0;
         r=((x_i(i)-x_b(n,i))^2+(y_i(i)-y_b(n,i))^2)^(0.5);
         dr=dr_b(n,i);
         % Check whether their is inner race and ball deformation
         del_i=Ri+Rb-r;
         if del_i>0
             F_spring_ball_inner=Kpb*del_i^(1.5);
-            % Inner race velocity projection
             r_b=[x_b(n,i),y_b(n,i)];
             r_c1=[x_i(i),y_i(i)];
             v_c1=[u_i(i),v_i(i)];
@@ -98,7 +114,7 @@ for i=1:maxItr
         r_new = r +(kb1_1 + 2*kb1_2 + 2*kb1_3 + kb1_4)/6;
         dr_new= dr+(kb2_1 + 2*kb2_2 + 2*kb2_3 + kb2_4)/6;
         
-        theta=atan2(y_b(n,i),x_b(n,i))+2*pi;
+        theta=atan2(y_b(n,i)-y_i(i),x_b(n,i)-x_i(i))+2*pi;
         x_b(n,i+1)=r_new*cos(theta+W*ts);
         y_b(n,i+1)=r_new*sin(theta+W*ts);
         dr_b(n,i+1)=dr_new;
@@ -175,6 +191,11 @@ title('Orbit of center of outer race')
 grid on
 
 figure(2)
+plot(x_i,y_i)
+title('Orbit of center of inner race')
+grid on
+
+figure(3)
 plot(X,Y)
 title('Path of center of Ball')
 grid on
