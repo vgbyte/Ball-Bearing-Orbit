@@ -4,20 +4,20 @@ clear all;
 
     Wi  = 180; Wo = 0;      % Inner and Outer race angular velocity in rad/sec, Wi=5rad/sec
     W   = Wi/2;           % Angular velocity of ball cenetr rotating about bearing axis 
-    Rb  = 3.98e-3;       % Ball Radius in m
+    Rb  = 3.967e-3;       % Ball Radius in m
     Ri  = 13.281e-3;      % Inner race radius in m
-    Ro  = 21.24e-3;      % Outer race radius in m
+    Ro  = 21.226e-3;      % Outer race radius in m
     N   = 8;              % Number of balls
     Mb  = 0.002;          % Single Ball Mass
     Mi  = 0.045;          % Inner race mass
     Mo  = 0.05;           % Outer race mass
     c_s = 740;            % Damping coefficient in N-s/m
-    c_b = 800;            % Damping coefficient in N-s/m
+    c_b = 0;%800;            % Damping coefficient in N-s/m
     Kpb = 2.8397e+05;     % Hertzian Constant Coefficient in N/m^(3/2)
     K_s = 3.7e7;          % Linear stiffness between shaft and bearing in N/m
     
     ts  = 1e-6;           % Time step in sec
-    TT  = 1;              % Total time in sec
+    TT  = 3;              % Total time in sec
     Fo  = 10;             % Harmonic force magnitude in N
     
     maxItr=TT/ts;         % Total iteration 
@@ -68,9 +68,9 @@ for i=1:maxItr
             r_b=[x_b(n,i),y_b(n,i)];
             r_c1=[x_i(i),y_i(i)];
             v_c1=[u_i(i),v_i(i)];
-            v_b=dr*r_b/norm(r_b);
-            r_c1_b=r_c1-r_b;
-            v_c1_b=v_c1-v_b;
+            v_b=dr*(r_b-r_c1)/norm(r_b-r_c1);
+            r_c1_b=r_b-r_c1;
+            v_c1_b=v_b-v_c1;
             x_dot=projection_A_on_B(v_c1_b,r_c1_b);
             F_damping_ball_inner=-x_dot*c_b;
         end
@@ -82,8 +82,7 @@ for i=1:maxItr
             r_c1=[x_i(i),y_i(i)];
             r_c2=[x_o(i),y_o(i)];
             v_c2=[u_o(i),v_o(i)];
-            v_b=dr*r_b/norm(r_b);
-            
+            v_b=dr*(r_b-r_c1)/norm(r_b-r_c1);
             r_c1_b=r_c1-r_b;
             r_c2_b=r_c2-r_b;
             v_c2_b=v_c2-v_b;
