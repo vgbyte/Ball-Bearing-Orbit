@@ -12,12 +12,12 @@ clear all;
     Mi  = 0.045;          % Inner race mass
     Mo  = 0.05;           % Outer race mass
     c_s = 740;            % Damping coefficient in N-s/m
-    c_b = 0;%800;            % Damping coefficient in N-s/m
+    c_b = 0;%80;            % Damping coefficient in N-s/m
     Kpb = 2.8397e+05;     % Hertzian Constant Coefficient in N/m^(3/2)
     K_s = 3.7e7;          % Linear stiffness between shaft and bearing in N/m
     
     ts  = 1e-6;           % Time step in sec
-    TT  = 3;              % Total time in sec
+    TT  = 1;              % Total time in sec
     Fo  = 10;             % Harmonic force magnitude in N
     
     maxItr=TT/ts;         % Total iteration 
@@ -64,20 +64,22 @@ for i=1:maxItr
         % Check whether their is inner race and ball deformation
         del_i=Ri+Rb-r;
         if del_i>0
+            c_b=80;
             F_spring_ball_inner=Kpb*del_i^(1.5);
             r_b=[x_b(n,i),y_b(n,i)];
             r_c1=[x_i(i),y_i(i)];
             v_c1=[u_i(i),v_i(i)];
             v_b=dr*(r_b-r_c1)/norm(r_b-r_c1);
-            r_c1_b=r_b-r_c1;
-            v_c1_b=v_b-v_c1;
-            x_dot=projection_A_on_B(v_c1_b,r_c1_b);
+            r_b_c1=r_b-r_c1;
+            v_b_c1=v_b-v_c1;
+            x_dot=projection_A_on_B(v_b_c1,r_b_c1);
             F_damping_ball_inner=-x_dot*c_b;
         end
         
         % Check whether their is outer race and ball deformation
         del_o=Rb-Ro+((x_o(i)-x_b(n,i))^2+(y_o(i)-y_b(n,i))^2)^(0.5);
         if del_o>0
+            c_b=0;
             r_b=[x_b(n,i),y_b(n,i)];
             r_c1=[x_i(i),y_i(i)];
             r_c2=[x_o(i),y_o(i)];
