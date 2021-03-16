@@ -1,5 +1,4 @@
-clear all; 
-
+clearvars;
 % INPUT DATA ( All the dimensions are in SI unit )
 
     Wi  = 180; Wo = 0;      % Inner and Outer race angular velocity in rad/sec, Wi=5rad/sec
@@ -12,12 +11,12 @@ clear all;
     Mi  = 0.045;          % Inner race mass
     Mo  = 0.05;           % Outer race mass
     c_s = 740;            % Damping coefficient in N-s/m
-    c_b = 0;%80;            % Damping coefficient in N-s/m
+    c_b = 800;            % Damping coefficient in N-s/m
     Kpb = 2.8397e+05;     % Hertzian Constant Coefficient in N/m^(3/2)
     K_s = 3.7e7;          % Linear stiffness between shaft and bearing in N/m
     
-    ts  = 1e-6;           % Time step in sec
-    TT  = 1;              % Total time in sec
+    ts  = 1e-06;           % Time step in sec
+    TT  = 10;              % Total time in sec
     Fo  = 10;             % Harmonic force magnitude in N
     
     maxItr=TT/ts;         % Total iteration 
@@ -64,7 +63,6 @@ for i=1:maxItr
         % Check whether their is inner race and ball deformation
         del_i=Ri+Rb-r;
         if del_i>0
-            c_b=80;
             F_spring_ball_inner=Kpb*del_i^(1.5);
             r_b=[x_b(n,i),y_b(n,i)];
             r_c1=[x_i(i),y_i(i)];
@@ -79,7 +77,6 @@ for i=1:maxItr
         % Check whether their is outer race and ball deformation
         del_o=Rb-Ro+((x_o(i)-x_b(n,i))^2+(y_o(i)-y_b(n,i))^2)^(0.5);
         if del_o>0
-            c_b=0;
             r_b=[x_b(n,i),y_b(n,i)];
             r_c1=[x_i(i),y_i(i)];
             r_c2=[x_o(i),y_o(i)];
@@ -116,8 +113,8 @@ for i=1:maxItr
         dr_new= dr+(kb2_1 + 2*kb2_2 + 2*kb2_3 + kb2_4)/6;
         
         theta=atan2(y_b(n,i)-y_i(i),x_b(n,i)-x_i(i))+2*pi;
-        x_b(n,i+1)=r_new*cos(theta+W*ts);
-        y_b(n,i+1)=r_new*sin(theta+W*ts);
+        x_b(n,i+1)=x_i(i)+r_new*cos(theta+W*ts);
+        y_b(n,i+1)=y_i(i)+r_new*sin(theta+W*ts);
         dr_b(n,i+1)=dr_new;
         
         if n==1
@@ -188,17 +185,20 @@ for i=1:maxItr
 end
 figure(1)
 plot(x_o,y_o)
-title('Orbit of center of outer race')
+str=sprintf('Orbit of outer race center for %dN eccentric loading',Fo);
+title(str)
 grid on
 
 figure(2)
 plot(x_i,y_i)
-title('Orbit of center of inner race')
+str=sprintf('Orbit of inner race center for %dN eccentric loading',Fo);
+title(str)
 grid on
 
 figure(3)
 plot(X,Y)
-title('Path of center of Ball')
+str=sprintf("Path's of Ball's center's for %dN eccentric loading",Fo);
+title(str)
 grid on
 
 function a = fun_distance(v)
