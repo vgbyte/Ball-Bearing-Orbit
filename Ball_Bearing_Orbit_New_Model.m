@@ -1,24 +1,24 @@
 clearvars;
 % INPUT DATA ( All the dimensions are in SI unit )
 
-    Wi  = 500; Wo = 0;      % Inner and Outer race angular velocity in rad/sec, Wi=5rad/sec
+    Wi  = 250;            % Inner and Outer race angular velocity in rad/sec
     W   = Wi/2;           % Angular velocity of ball cenetr rotating about bearing axis 
-    Rb  = 3.967e-3;       % Ball Radius in m
+    Rb  = 3.969e-3;       % Ball Radius in m
     Ri  = 13.281e-3;      % Inner race radius in m
     Ro  = 21.226e-3;      % Outer race radius in m
-    N   = 6;              % Number of balls
-    Mb  = 0.002;          % Single Ball Mass
+    N   = 8;              % Number of balls
+    Mb  = 0.008;          % Single ball mass
     Mi  = 0.045;          % Inner race mass
     Mo  = 0.05;           % Outer race mass
     c_s = 740;            % Damping coefficient in N-s/m
     c_b = 800;            % Damping coefficient in N-s/m
-    Kpb = 2.8397e+05;     % Hertzian Constant Coefficient in N/m^(3/2)
-    K_s = 3.7e7;          % Linear stiffness between shaft and bearing in N/m
+    Kpb = 2.8397e+010;    % Hertzian Constant Coefficient in N/m^(3/2)
+    K_s = 3.7e4;          % Linear stiffness between shaft and bearing in N/m
     K_sd= 3.7e4;          % Linear stiffness between outer race and damper housing in N/m
     c_sd= 400;            % Damping coefficient between outer race and damper housing in N-s/m
     
     
-    ts  = 1e-06;           % Time step in sec
+    ts  = 1e-06;          % Time step in sec
     TT  = 2;              % Total time in sec
     Fo  = 10;             % Harmonic force magnitude in N
     
@@ -229,6 +229,20 @@ frequency=round(Wi/(2*pi));
 str=sprintf("FFT plot for %dN and %dHz",Fo,frequency);
 title(str)
 saveas(fig_6,str,'png')
+
+fig_7=figure(7);
+plot(t,x_i)
+str=sprintf("X_i vs T for %dN eccentric loading",Fo);
+title(str)
+grid on
+saveas(fig_7,str,'png')
+
+fig_8=figure(8);
+plot(t,y_i);
+str=sprintf("Y_i vs T for %dN eccentric loading",Fo);
+title(str)
+grid on
+saveas(fig_8,str,'png')
 
 function a = fun_distance(v)
     a = v;
